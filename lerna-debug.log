@@ -1,0 +1,184 @@
+0 silly input []
+1 silly flags { _: [ 'bootstrap' ],
+1 silly flags   'reject-cycles': false,
+1 silly flags   rejectCycles: false,
+1 silly flags   args: [] }
+2 verbose rootPath /Users/davidclark/dev/mapbox/stickler
+3 info version 2.11.0
+4 silly existsSync /Users/davidclark/dev/mapbox/stickler/VERSION
+5 info versioning independent
+6 silly initialize attempt
+7 silly npmConfig { registry: undefined,
+7 silly npmConfig   npmClient: undefined,
+7 silly npmConfig   npmClientArgs: undefined,
+7 silly npmConfig   mutex: undefined }
+8 silly initialize success
+9 silly execute attempt
+10 info Bootstrapping 2 packages
+11 info lifecycle preinstall
+12 silly runScript preinstall @mapbox/eslint-plugin-stickler
+13 silly @mapbox/eslint-plugin-stickler
+14 silly runScript preinstall @mapbox/stickler
+15 silly @mapbox/stickler
+16 silly hasMatchingDependency @mapbox/stickler @mapbox/eslint-plugin-stickler
+17 silly hasDependencyInstalled @mapbox/stickler eslint
+18 silly dependencyIsSatisfied [ 'eslint',
+18 silly dependencyIsSatisfied   '^5.1.0',
+18 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core/node_modules' ]
+19 verbose dependencyIsSatisfied eslint false
+20 silly hasDependencyInstalled @mapbox/eslint-plugin-stickler eslint-plugin-node
+21 silly dependencyIsSatisfied [ 'eslint-plugin-node',
+21 silly dependencyIsSatisfied   '^6.0.1',
+21 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/node_modules' ]
+22 verbose dependencyIsSatisfied eslint-plugin-node true
+23 silly hasDependencyInstalled @mapbox/eslint-plugin-stickler eslint-plugin-import
+24 silly dependencyIsSatisfied [ 'eslint-plugin-import',
+24 silly dependencyIsSatisfied   '^2.13.0',
+24 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/node_modules' ]
+25 verbose dependencyIsSatisfied eslint-plugin-import false
+26 silly hasDependencyInstalled @mapbox/eslint-plugin-stickler eslint-plugin-promise
+27 silly dependencyIsSatisfied [ 'eslint-plugin-promise',
+27 silly dependencyIsSatisfied   '^3.8.0',
+27 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/node_modules' ]
+28 verbose dependencyIsSatisfied eslint-plugin-promise false
+29 silly hasDependencyInstalled @mapbox/eslint-plugin-stickler eslint-plugin-react
+30 silly dependencyIsSatisfied [ 'eslint-plugin-react',
+30 silly dependencyIsSatisfied   '^7.10.0',
+30 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/node_modules' ]
+31 verbose dependencyIsSatisfied eslint-plugin-react false
+32 silly hasDependencyInstalled @mapbox/eslint-plugin-stickler eslint-plugin-xss
+33 silly dependencyIsSatisfied [ 'eslint-plugin-xss',
+33 silly dependencyIsSatisfied   '^0.1.9',
+33 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/node_modules' ]
+34 verbose dependencyIsSatisfied eslint-plugin-xss false
+35 silly hasDependencyInstalled @mapbox/stickler globby
+36 silly dependencyIsSatisfied [ 'globby',
+36 silly dependencyIsSatisfied   '^8.0.1',
+36 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core/node_modules' ]
+37 verbose dependencyIsSatisfied globby false
+38 silly hasDependencyInstalled @mapbox/stickler lint-staged
+39 silly dependencyIsSatisfied [ 'lint-staged',
+39 silly dependencyIsSatisfied   '^7.2.0',
+39 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core/node_modules' ]
+40 verbose dependencyIsSatisfied lint-staged false
+41 silly hasDependencyInstalled @mapbox/stickler lodash
+42 silly dependencyIsSatisfied [ 'lodash',
+42 silly dependencyIsSatisfied   '^4.17.10',
+42 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core/node_modules' ]
+43 verbose dependencyIsSatisfied lodash false
+44 silly hasDependencyInstalled @mapbox/stickler micromatch
+45 silly dependencyIsSatisfied [ 'micromatch',
+45 silly dependencyIsSatisfied   '^3.1.10',
+45 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core/node_modules' ]
+46 verbose dependencyIsSatisfied micromatch false
+47 silly hasDependencyInstalled @mapbox/stickler prettier
+48 silly dependencyIsSatisfied [ 'prettier',
+48 silly dependencyIsSatisfied   '^1.13.7',
+48 silly dependencyIsSatisfied   '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core/node_modules' ]
+49 verbose dependencyIsSatisfied prettier false
+50 silly root dependencies []
+51 silly leaf dependencies {
+51 silly leaf dependencies   "@mapbox/stickler": [
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "eslint@^5.1.0",
+51 silly leaf dependencies       "isSatisfied": false
+51 silly leaf dependencies     },
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "globby@^8.0.1",
+51 silly leaf dependencies       "isSatisfied": false
+51 silly leaf dependencies     },
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "lint-staged@^7.2.0",
+51 silly leaf dependencies       "isSatisfied": false
+51 silly leaf dependencies     },
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "lodash@^4.17.10",
+51 silly leaf dependencies       "isSatisfied": false
+51 silly leaf dependencies     },
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "micromatch@^3.1.10",
+51 silly leaf dependencies       "isSatisfied": false
+51 silly leaf dependencies     },
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "prettier@^1.13.7",
+51 silly leaf dependencies       "isSatisfied": false
+51 silly leaf dependencies     }
+51 silly leaf dependencies   ],
+51 silly leaf dependencies   "@mapbox/eslint-plugin-stickler": [
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "eslint-plugin-node@^6.0.1",
+51 silly leaf dependencies       "isSatisfied": true
+51 silly leaf dependencies     },
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "eslint-plugin-import@^2.13.0",
+51 silly leaf dependencies       "isSatisfied": false
+51 silly leaf dependencies     },
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "eslint-plugin-promise@^3.8.0",
+51 silly leaf dependencies       "isSatisfied": false
+51 silly leaf dependencies     },
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "eslint-plugin-react@^7.10.0",
+51 silly leaf dependencies       "isSatisfied": false
+51 silly leaf dependencies     },
+51 silly leaf dependencies     {
+51 silly leaf dependencies       "dependency": "eslint-plugin-xss@^0.1.9",
+51 silly leaf dependencies       "isSatisfied": false
+51 silly leaf dependencies     }
+51 silly leaf dependencies   ]
+51 silly leaf dependencies }
+52 info Installing external dependencies
+53 verbose actions 2 actions, concurrency 4
+54 silly installInDir stickler-core [ 'eslint@^5.1.0',
+54 silly installInDir   'globby@^8.0.1',
+54 silly installInDir   'lint-staged@^7.2.0',
+54 silly installInDir   'lodash@^4.17.10',
+54 silly installInDir   'micromatch@^3.1.10',
+54 silly installInDir   'prettier@^1.13.7' ]
+55 silly installInDir backup /Users/davidclark/dev/mapbox/stickler/packages/stickler-core/package.json
+56 silly rename [ '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core/package.json',
+56 silly rename   '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core/package.json.lerna_backup' ]
+57 silly installInDir eslint-plugin-stickler [ 'eslint-plugin-node@^6.0.1',
+57 silly installInDir   'eslint-plugin-import@^2.13.0',
+57 silly installInDir   'eslint-plugin-promise@^3.8.0',
+57 silly installInDir   'eslint-plugin-react@^7.10.0',
+57 silly installInDir   'eslint-plugin-xss@^0.1.9' ]
+58 silly installInDir backup /Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/package.json
+59 silly rename [ '/Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/package.json',
+59 silly rename   '/Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/package.json.lerna_backup' ]
+60 silly installInDir writing tempJson { dependencies:
+60 silly installInDir    { 'eslint-plugin-node': '^6.0.1',
+60 silly installInDir      'eslint-plugin-import': '^2.13.0',
+60 silly installInDir      'eslint-plugin-promise': '^3.8.0',
+60 silly installInDir      'eslint-plugin-react': '^7.10.0',
+60 silly installInDir      'eslint-plugin-xss': '^0.1.9' } }
+61 silly installInDir writing tempJson { dependencies:
+61 silly installInDir    { eslint: '^5.1.0',
+61 silly installInDir      globby: '^8.0.1',
+61 silly installInDir      'lint-staged': '^7.2.0',
+61 silly installInDir      lodash: '^4.17.10',
+61 silly installInDir      micromatch: '^3.1.10',
+61 silly installInDir      prettier: '^1.13.7' } }
+62 silly getExecOpts { cwd: '/Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler' }
+63 silly installInDir [ 'npm', [ 'install' ] ]
+64 silly getExecOpts { cwd: '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core' }
+65 silly installInDir [ 'npm', [ 'install' ] ]
+66 silly installInDir cleanup /Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/package.json
+67 silly renameSync [ '/Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/package.json.lerna_backup',
+67 silly renameSync   '/Users/davidclark/dev/mapbox/stickler/packages/eslint-plugin-stickler/package.json' ]
+68 verbose installed leaf @mapbox/eslint-plugin-stickler
+69 silly installInDir cleanup /Users/davidclark/dev/mapbox/stickler/packages/stickler-core/package.json
+70 silly renameSync [ '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core/package.json.lerna_backup',
+70 silly renameSync   '/Users/davidclark/dev/mapbox/stickler/packages/stickler-core/package.json' ]
+71 verbose installed leaf @mapbox/stickler
+72 error execute callback with error
+73 error Error: Command failed: npm install
+73 error npm WARN notice Due to a recent security incident, all user tokens have been invalidated. Please see https://status.npmjs.org/incidents/dn7c1fgrr7ng for more details. To generate a new token, visit https://www.npmjs.com/settings/~/tokens or run "npm login".
+73 error npm ERR! code E404
+73 error npm ERR! 404 Not Found: @mapbox/eslint-plugin-stickler@0.1.0
+73 error
+73 error npm ERR! A complete log of this run can be found in:
+73 error npm ERR!     /Users/davidclark/.npm/_logs/2018-07-17T19_25_28_115Z-debug.log
+73 error
+73 error     at Promise.all.then.arr (/Users/davidclark/dev/mapbox/stickler/node_modules/execa/index.js:236:11)
+73 error     at <anonymous>

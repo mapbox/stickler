@@ -1,0 +1,29 @@
+{
+  "name": "@mapbox/eslint-plugin-stickler",
+  "version": "0.1.0",
+  "description": "An ESLint plugin for @mapbox/stickler",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapbox/stickler.git"
+  },
+  "author": "Mapbox",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/mapbox/stickler/issues"
+  },
+  "homepage": "https://github.com/mapbox/stickler#readme",
+  "engines": {
+    "node": ">=6"
+  },
+  "dependencies": {
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-react": "^7.10.0",
+    "eslint-plugin-xss": "^0.1.9"
+  }
+}
