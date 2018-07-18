@@ -6,14 +6,15 @@ const path = require('path');
 const eslintFormatterPretty = require('eslint-formatter-pretty');
 const lint = require('../lib/commands/lint');
 const format = require('../lib/commands/format');
-const reviewStaged = require('../lib/commands/review-staged');
+const precommit = require('../lib/commands/precommit');
 const configUtils = require('../lib/config-utils');
 
 const filesOptions = {
   description:
     'Files or globs. Wrap globs in quotation marks for cross-platform consistency.',
   type: 'string',
-  normalize: true
+  normalize: true,
+  default: '**/*.{js,json,md}'
 };
 
 yargs
@@ -26,10 +27,10 @@ yargs
     runFormat
   )
   .command(
-    'review-staged',
-    'Review staged files. For use in a precommit hook.',
-    defineReviewStaged,
-    runReviewStaged
+    'precommit',
+    'Lint and format staged files. For use in scripts.precommit.',
+    definePrecommit,
+    runPrecommit
   )
   .demand(1, 'You must specify a command')
   .help().argv;
@@ -77,15 +78,22 @@ function runFormat(argv) {
         console.log(`  ${path.relative(process.cwd(), filename)}`);
       }
     })
-    .catch(handleUnexpectedError);
+    .catch(error => {
+      // Print Prettier SyntaxErrors without the stack trace.
+      if (SyntaxError.prototype.isPrototypeOf(error)) {
+        console.error(`SyntaxError: ${error.message}`);
+      } else {
+        handleUnexpectedError(error);
+      }
+    });
 }
 
-function defineReviewStaged(y) {
+function definePrecommit(y) {
   y.version(false).help();
 }
 
-function runReviewStaged() {
-  reviewStaged().then(code => {
+function runPrecommit() {
+  precommit().then(code => {
     if (code !== 0) {
       process.exit(1);
     }

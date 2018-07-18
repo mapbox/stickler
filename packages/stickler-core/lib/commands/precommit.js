@@ -4,7 +4,7 @@ const child_process = require('child_process');
 const path = require('path');
 const resolveBin = require('../resolve-bin');
 
-function reviewStaged() {
+function precommit() {
   return new Promise((resolve, reject) => {
     let child;
     try {
@@ -24,4 +24,4 @@ function reviewStaged() {
   });
 }
 
-module.exports = reviewStaged;
+module.exports = precommit;

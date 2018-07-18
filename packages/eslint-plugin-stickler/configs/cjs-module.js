@@ -3,12 +3,9 @@
 module.exports = {
   env: {
     commonjs: true,
-    browser: true,
-    es6: false,
-    node: false
   },
-  globals: {
-    Promise: true
+  parserOptions: {
+    sourceType: 'script'
   },
   rules: {
     '@mapbox/stickler/node/no-missing-require': 'error'

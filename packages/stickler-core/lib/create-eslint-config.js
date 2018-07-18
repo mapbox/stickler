@@ -17,7 +17,7 @@ function createEslintConfig(sticklerLintConfig = {}) {
   };
 
   // Add configs that are on by default.
-  Object.keys(eslintPluginStickler.configs).forEach(configId => {
+  eslintPluginStickler.configOrder.forEach(configId => {
     if (sticklerLintConfig[configId] === true) {
       config.extends.push(`plugin:@mapbox/stickler/${configId}`);
     }
@@ -29,14 +29,16 @@ function createEslintConfig(sticklerLintConfig = {}) {
       throw new Error('You cannot use ESLint plugins that are not built into Stickler');
     }
     Object.keys(eslintConfig).forEach(key => {
-      if (key === 'extends') {
-        config.extends = config.extends.concat(eslintConfig[key]).filter(Boolean);
-        return;
+      switch (key) {
+        case 'extends':
+          config.extends = config.extends.concat(eslintConfig[key]).filter(Boolean);
+          break;
+        case 'rules':
+          config.rules = normalizeRules(eslintConfig.rules);
+          break;
+        default:
+          config[key] = eslintConfig[key];
       }
-      if (key === 'rules') {
-        config.rules = normalizeRules(config.rules);
-      }
-      config[key] = eslintConfig[key];
     });
   }
 
@@ -47,7 +49,7 @@ function normalizeRules(rules) {
   return Object.keys(rules).reduce((memo, ruleName) => {
     const prefixedRuleName = ruleName.startsWith('@mapbox/stickler/')
       ? ruleName
-      : `@mapbox/sticker/${ruleName}`;
+      : `@mapbox/stickler/${ruleName}`;
     memo[prefixedRuleName] = rules[ruleName];
     return memo;
   }, {});

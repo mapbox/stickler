@@ -20,11 +20,21 @@ module.exports = {
     //
     // Use babel-eslint, because you're using non-standard syntax.
     babel: boolean,
-    'es5-browser': boolean,
+    // Use for ES5 environments.
+    'es5': boolean,
+    // Prevent Flow annotations from breaking ESLint.
+    // Uses babel-eslint and the base eslint-plugin-flowtype rules.
     flow: boolean,
-    import: boolean,
+    // ES2015 modules (import/export).
+    'es-module': boolean,
+    // CommonJS modules. Node configs already incorporate this; so use
+    // this module for browser configs.
+    'cjs-module': boolean,
     // Maybe this one should be on by default in __tests__ directories.
     jest: boolean,
+    // Code for the browser, not Node. The React config already
+    // incorporates this.
+    browser: boolean,
     // Only one node option is allowed.
     // node reads from the "engines" field in package.json.
     // The others are useful if for some reason you don't specify an engine.

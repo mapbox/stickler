@@ -23,11 +23,13 @@ Object.keys(plugins).forEach(pluginName => {
 module.exports = {
   rules: scopedPluginRules,
   configs: {
-    babel: require('./configs/babel-eslint'),
+    babel: require('./configs/babel'),
     base: require('./configs/base'),
-    'es5-browser': require('./configs/es5-browser'),
+    browser: require('./configs/browser'),
+    'es5': require('./configs/es5'),
     flow: require('./configs/flow'),
-    import: require('./configs/import'),
+    'cjs-module': require('./configs/cjs-module'),
+    'es-module': require('./configs/es-module'),
     jest: require('./configs/jest'),
     node: require('./configs/node'),
     node6: require('./configs/node6'),
@@ -35,5 +37,21 @@ module.exports = {
     promise: require('./configs/promise'),
     react: require('./configs/react'),
     xss: require('./configs/xss')
-  }
+  },
+  configOrder: [
+    'babel',
+    'base',
+    'cjs-module',
+    'es-module',
+    'es5',
+    'jest',
+    'browser',
+    'node',
+    'node6',
+    'node8',
+    'promise',
+    'xss',
+    'react',
+    'flow'
+  ]
 };
