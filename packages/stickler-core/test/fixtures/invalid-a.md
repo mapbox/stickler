@@ -2,8 +2,15 @@
 
 ## Table of contents
 
-## bar
+- [bar](#bar)
+- [bar](#bar-1)
+
 ## bar
 
-	* asdf
-* Asdf
+## bar
+
+```
+* asdf
+```
+
+- Asdf

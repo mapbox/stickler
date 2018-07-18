@@ -15,7 +15,7 @@ const remarker = remark()
       fences: true
     }
   })
-  .use(require('remark-toc'));
+  .use(require('remark-toc'), { maxDepth: 3, tight: true });
 
 /**
  * Format Markdown files. Overwrites the existing file.

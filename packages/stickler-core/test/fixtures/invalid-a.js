@@ -1,5 +1,3 @@
-var foo =    'bar';
+var foo = 'bar';
 
-new Promise((x     , y) => {
-
-});
+new Promise((x, y) => {});

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict';
 
 const yargs = require('yargs');
@@ -5,6 +6,7 @@ const path = require('path');
 const eslintFormatterPretty = require('eslint-formatter-pretty');
 const lint = require('../lib/commands/lint');
 const format = require('../lib/commands/format');
+const reviewStaged = require('../lib/commands/review-staged');
 const configUtils = require('../lib/config-utils');
 
 const filesOptions = {
@@ -17,7 +19,18 @@ const filesOptions = {
 yargs
   .usage('$0 <command>')
   .command('lint [files..]', 'Lint files', defineLint, runLint)
-  .command('format [options] [files..]', 'Format files', defineFormat, runFormat)
+  .command(
+    'format [options] [files..]',
+    'Format files',
+    defineFormat,
+    runFormat
+  )
+  .command(
+    'review-staged',
+    'Review staged files. For use in a precommit hook.',
+    defineReviewStaged,
+    runReviewStaged
+  )
   .demand(1, 'You must specify a command')
   .help().argv;
 
@@ -44,7 +57,7 @@ function runLint(argv) {
 function defineFormat(y) {
   y.version(false)
     .option('quiet', {
-      description: 'Don\'t log a list of formatted files',
+      description: "Don't log a list of formatted files",
       alias: 'q',
       type: 'boolean'
     })
@@ -65,6 +78,18 @@ function runFormat(argv) {
       }
     })
     .catch(handleUnexpectedError);
+}
+
+function defineReviewStaged(y) {
+  y.version(false).help();
+}
+
+function runReviewStaged() {
+  reviewStaged().then(code => {
+    if (code !== 0) {
+      process.exit(1);
+    }
+  }).catch(handleUnexpectedError);
 }
 
 function loadConfig() {
