@@ -1,20 +1,12 @@
 'use strict';
 
-const defaultExtendables = [
-  'promise',
-  'xss'
-];
+const eslintPluginStickler = require('@mapbox/eslint-plugin-stickler');
 
-const optInExtendables = [
-  'es5-browser',
-  'import',
-  'jest',
-  'node',
-  'node6',
-  'node8',
-  'react'
-]
-
+/**
+ * Create an ESLint config from a Stickler config's jsLint value.
+ *
+ * @param {Object} sticklerLintConfig
+ */
 function createEslintConfig(sticklerLintConfig = {}) {
   const config = {
     extends: [
@@ -24,16 +16,9 @@ function createEslintConfig(sticklerLintConfig = {}) {
   };
 
   // Add configs that are on by default.
-  defaultExtendables.forEach(extendable => {
-    if (sticklerLintConfig[extendable] !== false) {
-      config.extends.push(`plugin:@mapbox/stickler/${extendable}`);
-    }
-  });
-
-  // Add configs that are opt-in.
-  optInExtendables.forEach(extendable => {
-    if (sticklerLintConfig[extendable] === true) {
-      config.extends.push(`plugin:@mapbox/stickler/${extendable}`);
+  Object.keys(eslintPluginStickler.configs).forEach(configId => {
+    if (sticklerLintConfig[configId] !== false) {
+      config.extends.push(`plugin:@mapbox/stickler/${configId}`);
     }
   });
 

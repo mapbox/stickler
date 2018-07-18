@@ -14,7 +14,6 @@ module.exports = {
   jsLint: {
     // The following are on (true) by default.
     promise: boolean,
-    xss: boolean,
     // The rest are off (false) by default.
     // Some of these are incompatible (e.g. es5-browser and import),
     // so you'll be warned when the stickler config is validated.
@@ -29,6 +28,7 @@ module.exports = {
     node6: boolean,
     node8: boolean,
     react: boolean,
+    xss: boolean,
     // Add custom ESLint stuff. You won't be able to install your own
     // plugins, but all of the rules from plugins used above will be available
     // at @mapbox/stickler/{pluginName}/{ruleName},

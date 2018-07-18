@@ -3,42 +3,30 @@
 const Eslint = require('eslint');
 const _ = require('lodash');
 const micromatch = require('micromatch');
-const globby = require('globby');
 const createEslintConfig = require('./create-eslint-config');
 
-const defaultIgnoreGlob = [
-  '**/node_modules/**',
-  'coverage/**',
-  '**/*.min.js',
-  'vendor/**',
-  'dist/**'
-];
+function lintJs(sticklerConfig, filenames) {
+  if (sticklerConfig.lintJs === false) {
+    return Promise.resolve();
+  }
 
-function lint(globs, sticklerConfig = {}) {
-  const ignoreGlob = defaultIgnoreGlob.concat(sticklerConfig.ignore).filter(Boolean);
-  return globby(globs, {
-    ignore: ignoreGlob,
-    gitignore: true
-  })
-    .then(filenames => {
-      const configFilenamesMap = mapConfigsToFilenames(
-        filenames,
-        sticklerConfig
-      );
-      const reportPromises = [];
-      for (const [config, filenames] of configFilenamesMap) {
-        const eslintConfig = createEslintConfig(config.jsLint);
-        reportPromises.push(runEslintOnFiles(eslintConfig, Array.from(filenames)));
-      }
-      return Promise.all(reportPromises);
-    })
-    .then(mergeEslintReports);
+  const configFilenamesMap = mapConfigsToFilenames(
+    sticklerConfig,
+    filenames
+  );
+  const reportPromises = [];
+  for (const [config, filenames] of configFilenamesMap) {
+    const eslintConfig = createEslintConfig(config.jsLint);
+    reportPromises.push(runEslintOnFiles(eslintConfig, Array.from(filenames)));
+  }
+  return Promise.all(reportPromises).then(mergeEslintReports);
 }
 
 function runEslintOnFiles(eslintConfig, filenames) {
   const eslintEngine = new Eslint.CLIEngine({
     baseConfig: eslintConfig,
-    useEslintrc: false
+    useEslintrc: false,
+    ignore: false
   });
   return eslintEngine.executeOnFiles(filenames);
 }
@@ -54,7 +42,7 @@ function mapGlobsToConfigs(sticklerConfig) {
     );
   }
 
-  globConfigMap.set(['**/*.{js,jsx,mjs}'], baseConfig);
+  globConfigMap.set(['**/*.js'], baseConfig);
 
   return globConfigMap;
 }
@@ -73,7 +61,7 @@ function getConfigForFile(filename, globConfigMap) {
   }
 }
 
-function mapConfigsToFilenames(filenames, sticklerConfig) {
+function mapConfigsToFilenames(sticklerConfig, filenames) {
   const globConfigMap = mapGlobsToConfigs(sticklerConfig);
   const configFilenamesMap = new Map();
 
@@ -95,4 +83,4 @@ function mergeEslintReports(reports) {
   }, []);
 }
 
-module.exports = lint;
+module.exports = lintJs;
