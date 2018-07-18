@@ -17,7 +17,11 @@ module.exports = {
     // The rest are off (false) by default.
     // Some of these are incompatible (e.g. es5-browser and import),
     // so you'll be warned when the stickler config is validated.
+    //
+    // Use babel-eslint, because you're using non-standard syntax.
+    babel: boolean,
     'es5-browser': boolean,
+    flow: boolean,
     import: boolean,
     // Maybe this one should be on by default in __tests__ directories.
     jest: boolean,
@@ -33,7 +37,7 @@ module.exports = {
     // plugins, but all of the rules from plugins used above will be available
     // at @mapbox/stickler/{pluginName}/{ruleName},
     // e.g. @mapbox/stickler/react/no-whatever.
-    custom: {..}
+    eslintConfig: {..}
   },
   // Toggle Prettier formatting of JS. On by default.
   jsFormat: boolean,

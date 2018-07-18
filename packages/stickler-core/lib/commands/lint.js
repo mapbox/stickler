@@ -30,7 +30,8 @@ function lint(sticklerConfig, globs) {
 function prefixRuleIds(prefix, results) {
   return results.map(result => {
     result.messages = result.messages.map(message => {
-      message.ruleId = `${prefix}:${message.ruleId}`;
+      const unprefixedRuleId = message.ruleId.replace(/^@mapbox\/stickler\//, '');
+      message.ruleId = `${prefix}:${unprefixedRuleId}`;
       return message;
     });
     return result;

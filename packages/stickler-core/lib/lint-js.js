@@ -38,7 +38,7 @@ function mapGlobsToConfigs(sticklerConfig) {
   for (const override of sticklerConfig.overrides || []) {
     globConfigMap.set(
       override.files,
-      mergeConfigs(_.omit(override, ['files']), baseConfig)
+      mergeConfigs(baseConfig, _.omit(override, ['files']))
     );
   }
 
@@ -48,9 +48,10 @@ function mapGlobsToConfigs(sticklerConfig) {
 }
 
 function mergeConfigs(a, b) {
-  return Object.assign({}, a, b, {
+  const merged = Object.assign({}, a, b, {
     jsLint: Object.assign({}, a.jsLint, b.jsLint)
   });
+  return merged;
 }
 
 function getConfigForFile(filename, globConfigMap) {

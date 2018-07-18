@@ -20,7 +20,7 @@ yargs
   .usage('$0 <command>')
   .command('lint [files..]', 'Lint files', defineLint, runLint)
   .command(
-    'format [options] [files..]',
+    'format [files..]',
     'Format files',
     defineFormat,
     runFormat
@@ -68,7 +68,7 @@ function defineFormat(y) {
 function runFormat(argv) {
   format(loadConfig(), argv.files)
     .then(formattedFilenames => {
-      if (argv.quiet) {
+      if (argv.quiet || formattedFilenames.length === 0) {
         return;
       }
 

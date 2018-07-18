@@ -4,7 +4,7 @@
  * Validate and normalize Stickler configuration.
  *
  * @param {Object} [config]
- * @returns SticklerConfig
+ * @returns {SticklerConfig}
  */
 function normalize(config = {}) {
   // TODO: Add validation.
@@ -46,7 +46,7 @@ function normalize(config = {}) {
  *
  * @param {SticklerConfig} a
  * @param {SticklerConfig} b
- * @returns SticklerConfig
+ * @returns {SticklerConfig}
  */
 function mergeConfigs(a = {}, b = {}) {
   return Object.assign({}, a, b, {

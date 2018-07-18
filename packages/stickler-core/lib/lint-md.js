@@ -6,13 +6,12 @@ const fs = require('fs');
 const createVfile = require('vfile');
 
 const remarker = remark()
-  .use(require('remark-validate-links'), [2])
-  .use(require('remark-lint-blockquote-indentation'), [2])
-  .use(require('remark-lint-final-definition'), [2])
-  .use(require('remark-lint-no-duplicate-definitions'), [2])
-  .use(require('remark-lint-no-multiple-toplevel-headings'))
-  .use(require('remark-lint-no-tabs'), [2])
-  .use(require('remark-lint-no-undefined-references'), [2]);
+  .use(require('remark-validate-links'), ['error'])
+  .use(require('remark-lint-blockquote-indentation'), ['error'])
+  .use(require('remark-lint-final-definition'), ['error'])
+  .use(require('remark-lint-no-duplicate-definitions'), ['error'])
+  .use(require('remark-lint-no-multiple-toplevel-headings'), ['error'])
+  .use(require('remark-lint-no-undefined-references'), ['error']);
 
 function lintMd(sticklerConfig, filenames) {
   if (sticklerConfig.lintMd === false) {

@@ -1,11 +1,12 @@
 'use strict';
 
 const plugins = {
+  flowtype: require('eslint-plugin-flowtype'),
   import: require('eslint-plugin-import'),
   node: require('eslint-plugin-node'),
   promise: require('eslint-plugin-promise'),
   react: require('eslint-plugin-react'),
-  xss: require('eslint-plugin-xss')
+  xss: require('eslint-plugin-xss'),
 };
 
 const scopedPluginRules = {};
@@ -22,8 +23,10 @@ Object.keys(plugins).forEach(pluginName => {
 module.exports = {
   rules: scopedPluginRules,
   configs: {
+    babel: require('./configs/babel-eslint'),
     base: require('./configs/base'),
     'es5-browser': require('./configs/es5-browser'),
+    flow: require('./configs/flow'),
     import: require('./configs/import'),
     jest: require('./configs/jest'),
     node: require('./configs/node'),

@@ -2,13 +2,14 @@
 
 const child_process = require('child_process');
 const path = require('path');
+const resolveBin = require('../resolve-bin');
 
 function reviewStaged() {
   return new Promise((resolve, reject) => {
     let child;
     try {
       child = child_process.spawn(
-        path.resolve(__dirname, '../../node_modules/.bin/lint-staged'),
+        resolveBin('lint-staged'),
         ['--config', path.resolve(__dirname, '../lint-staged.config.js')],
         { stdio: 'inherit' }
       );

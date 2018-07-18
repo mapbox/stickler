@@ -22,7 +22,7 @@ const remarker = remark()
  *
  * @param {SticklerConfig} sticklerConfig
  * @param {Array<string>} filenames
- * @returns Array<string> - Array of filenames that were formatted.
+ * @returns {Array<string>} Array of filenames that were formatted.
  */
 function formatMd(sticklerConfig, filenames) {
   if (sticklerConfig.formatMd === false) {

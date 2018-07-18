@@ -9,7 +9,7 @@ const fs = require('fs');
  *
  * @param {SticklerConfig} sticklerConfig
  * @param {Array<string>} filenames
- * @returns Array<string> - Array of filenames that were formatted.
+ * @returns {Array<string>} Array of filenames that were formatted.
  */
 function formatJs(sticklerConfig, filenames) {
   if (sticklerConfig.formatJs === false) {
