@@ -7,6 +7,8 @@
  * @returns SticklerConfig
  */
 function normalize(config = {}) {
+  // TODO: Add validation.
+
   // Apply easy defaults.
   const normalized = Object.assign(
     {

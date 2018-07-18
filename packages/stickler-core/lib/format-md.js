@@ -17,12 +17,21 @@ const remarker = remark()
   })
   .use(require('remark-toc'));
 
+/**
+ * Format Markdown files. Overwrites the existing file.
+ *
+ * @param {SticklerConfig} sticklerConfig
+ * @param {Array<string>} filenames
+ * @returns Array<string> - Array of filenames that were formatted.
+ */
 function formatMd(sticklerConfig, filenames) {
   if (sticklerConfig.formatMd === false) {
     return Promise.resolve();
   }
 
-  return Promise.all(filenames.map(formatMdFile));
+  return Promise.all(filenames.map(formatMdFile)).then(results => {
+    return results.filter(Boolean);
+  });
 }
 
 function formatMdFile(filename) {
@@ -33,9 +42,10 @@ function formatMdFile(filename) {
       .then(String)
       .then(formatted => {
         // Don't write if the file didn't change.
-        if (raw !== formatted) {
-          return pify(fs.writeFile)(filename, formatted);
+        if (raw === formatted) {
+          return;
         }
+        return pify(fs.writeFile)(filename, formatted).then(() => filename);
       });
   });
 }

@@ -3,7 +3,6 @@
 const globby = require('globby');
 const micromatch = require('micromatch');
 const vfileToEslint = require('vfile-to-eslint');
-const eslintFormatterPretty = require('eslint-formatter-pretty');
 const lintJs = require('../lint-js');
 const lintMd = require('../lint-md');
 
@@ -23,8 +22,7 @@ function lint(sticklerConfig, globs) {
         ...prefixRuleIds('eslint', jsResults),
         ...prefixRuleIds('remark', vfileToEslint(mdResults))
       ];
-      const formattedResults = eslintFormatterPretty(eslintResults);
-      console.log(formattedResults);
+      return eslintResults;
     });
   });
 }
