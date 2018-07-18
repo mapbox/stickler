@@ -17,6 +17,14 @@ const remarker = remark()
   })
   .use(require('remark-toc'));
 
+function formatMd(sticklerConfig, filenames) {
+  if (sticklerConfig.formatMd === false) {
+    return Promise.resolve();
+  }
+
+  return Promise.all(filenames.map(formatMdFile));
+}
+
 function formatMdFile(filename) {
   return pify(fs.readFile)(filename, 'utf8').then(raw => {
     const vfile = createVfile({ path: filename, contents: raw });
@@ -30,14 +38,6 @@ function formatMdFile(filename) {
         }
       });
   });
-}
-
-function formatMd(sticklerConfig, filenames) {
-  if (sticklerConfig.formatMd === false) {
-    return Promise.resolve();
-  }
-
-  return Promise.all(filenames.map(formatMdFile));
 }
 
 module.exports = formatMd;

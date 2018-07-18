@@ -4,6 +4,14 @@ const prettier = require('prettier');
 const pify = require('pify');
 const fs = require('fs');
 
+function formatJs(sticklerConfig, filenames) {
+  if (sticklerConfig.formatJs === false) {
+    return Promise.resolve();
+  }
+
+  return Promise.all(filenames.map(formatJsFile));
+}
+
 function formatJsFile(filename) {
   return pify(fs.readFile)(filename, 'utf8').then(raw => {
     return prettier
@@ -18,14 +26,6 @@ function formatJsFile(filename) {
         }
       });
   });
-}
-
-function formatJs(sticklerConfig, filenames) {
-  if (sticklerConfig.formatJs === false) {
-    return Promise.resolve();
-  }
-
-  return Promise.all(filenames.map(formatJsFile));
 }
 
 module.exports = formatJs;

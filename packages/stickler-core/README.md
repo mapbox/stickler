@@ -51,8 +51,7 @@ module.exports = {
   overrides: [
     {
       files: [..],
-      jsLint: {..},
-      mdLint: boolean
+      jsLint: {..}
     }
   ]
 }

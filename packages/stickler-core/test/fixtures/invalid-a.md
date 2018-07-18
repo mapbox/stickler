@@ -3,7 +3,7 @@
 ## Table of contents
 
 ## bar
-## baz
+## bar
 
-* asdf
+	* asdf
 * Asdf

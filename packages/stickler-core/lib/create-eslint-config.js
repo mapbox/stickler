@@ -26,11 +26,11 @@ function createEslintConfig(sticklerLintConfig = {}) {
     const { eslintConfig } = sticklerLintConfig;
     Object.keys(eslintConfig).forEach(key => {
       if (key === 'extends') {
-        config.extends = config.extends.concat(eslintConfig[key]);
+        config.extends = config.extends.concat(eslintConfig[key]).filter(Boolean);
         return;
       }
       if (key === 'plugins') {
-        config.plugins = config.plugins.concat(eslintConfig[key]);
+        config.plugins = config.plugins.concat(eslintConfig[key]).filter(Boolean);
         return;
       }
       config[key] = eslintConfig[key];

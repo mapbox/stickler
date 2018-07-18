@@ -1,4 +1,6 @@
-# stickler
+# @mapbox/stickler
+
+**EXPERIMENTAL! WORK IN PROGRESS!**
 
 No-fuss code quality enforcement for Mapbox frontend repositories.
 
