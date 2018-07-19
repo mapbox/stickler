@@ -2,7 +2,7 @@
 
 module.exports = {
   env: {
-    commonjs: true,
+    commonjs: true
   },
   parserOptions: {
     sourceType: 'script'

@@ -27,5 +27,8 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-react": "^7.10.0",
     "eslint-plugin-xss": "^0.1.9"
+  },
+  "devDependencies": {
+    "eslint": "^5.1.0"
   }
 }

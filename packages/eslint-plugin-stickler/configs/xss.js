@@ -2,7 +2,7 @@
 
 module.exports = {
   env: {
-    'browser': true
+    browser: true
   },
   rules: {
     '@mapbox/stickler/xss/no-mixed-html': 'error',

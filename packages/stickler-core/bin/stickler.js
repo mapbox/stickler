@@ -20,12 +20,7 @@ const filesOptions = {
 yargs
   .usage('$0 <command>')
   .command('lint [files..]', 'Lint files', defineLint, runLint)
-  .command(
-    'format [files..]',
-    'Format files',
-    defineFormat,
-    runFormat
-  )
+  .command('format [files..]', 'Format files', defineFormat, runFormat)
   .command(
     'precommit',
     'Lint and format staged files. For use in scripts.precommit.',
@@ -93,11 +88,13 @@ function definePrecommit(y) {
 }
 
 function runPrecommit() {
-  precommit().then(code => {
-    if (code !== 0) {
-      process.exit(1);
-    }
-  }).catch(handleUnexpectedError);
+  precommit()
+    .then(code => {
+      if (code !== 0) {
+        process.exit(1);
+      }
+    })
+    .catch(handleUnexpectedError);
 }
 
 function loadConfig() {

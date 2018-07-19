@@ -2,14 +2,14 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
+    "precommit": "packages/stickler-core/bin/stickler.js precommit",
+    "format": "packages/stickler-core/bin/stickler.js format",
+    "lint": "packages/stickler-core/bin/stickler.js lint",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "lerna bootstrap"
   },
   "devDependencies": {
-    "@mapbox/eslint-config-mapbox": "^1.2.1",
-    "eslint": "^5.1.0",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-node": "^7.0.1",
+    "husky": "^0.14.3",
     "lerna": "^2.11.0"
   },
   "engines": {

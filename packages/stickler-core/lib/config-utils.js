@@ -26,7 +26,8 @@ function normalize(config = {}) {
     'coverage/**',
     '**/*.min.js',
     'vendor/**',
-    'dist/**'
+    'dist/**',
+    '**/fixtures/**'
   ]
     .concat(normalized.ignore)
     .filter(Boolean);

@@ -13,10 +13,7 @@ function lintJs(sticklerConfig, filenames) {
     return Promise.resolve();
   }
 
-  const sjlcFilenameMap = mapSjlcsToFilenames(
-    sticklerConfig,
-    filenames
-  );
+  const sjlcFilenameMap = mapSjlcsToFilenames(sticklerConfig, filenames);
   const reportPromises = [];
   for (const [sjlc, filenames] of sjlcFilenameMap) {
     const eslintConfig = createEslintConfig(sjlc);

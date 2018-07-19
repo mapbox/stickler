@@ -6,7 +6,7 @@ const plugins = {
   node: require('eslint-plugin-node'),
   promise: require('eslint-plugin-promise'),
   react: require('eslint-plugin-react'),
-  xss: require('eslint-plugin-xss'),
+  xss: require('eslint-plugin-xss')
 };
 
 const scopedPluginRules = {};
@@ -26,7 +26,7 @@ module.exports = {
     babel: require('./configs/babel'),
     base: require('./configs/base'),
     browser: require('./configs/browser'),
-    'es5': require('./configs/es5'),
+    es5: require('./configs/es5'),
     flow: require('./configs/flow'),
     'cjs-modules': require('./configs/cjs-modules'),
     'es-modules': require('./configs/es-modules'),
