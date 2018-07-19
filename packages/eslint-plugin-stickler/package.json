@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/eslint-plugin-stickler",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "An ESLint plugin for @mapbox/stickler",
   "main": "index.js",
   "scripts": {
