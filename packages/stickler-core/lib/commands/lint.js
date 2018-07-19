@@ -19,21 +19,18 @@ function lint(sticklerConfig, globs) {
       lintMd(sticklerConfig, mdFilenames)
     ]).then(([jsResults, mdResults]) => {
       const eslintResults = [
-        ...prefixRuleIds('eslint', jsResults),
-        ...prefixRuleIds('remark', vfileToEslint(mdResults))
+        ...normalizeResults(jsResults),
+        ...normalizeResults(vfileToEslint(mdResults))
       ];
       return eslintResults;
     });
   });
 }
 
-function prefixRuleIds(prefix, results) {
+function normalizeResults(results) {
   return results.map(result => {
     result.messages = result.messages.map(message => {
-      const unprefixedRuleId = !message.ruleId
-        ? 'SyntaxError'
-        : message.ruleId.replace(/^@mapbox\/stickler\//, '');
-      message.ruleId = `${prefix}:${unprefixedRuleId}`;
+      message.ruleId = message.ruleId || 'SyntaxError';
       return message;
     });
     return result;

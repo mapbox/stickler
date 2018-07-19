@@ -12,6 +12,7 @@ module.exports = {
   // Everything except `custom` is a boolean that toggles
   // a preconfigured ESLint config that targets a flavor of JS.
   jsLint: {
+    globals: { [string]: boolean },
     // The following are on (true) by default.
     promise: boolean,
     // The rest are off (false) by default.
@@ -25,29 +26,34 @@ module.exports = {
     // Prevent Flow annotations from breaking ESLint.
     // Uses babel-eslint and the base eslint-plugin-flowtype rules.
     flow: boolean,
-    // ES2015 modules (import/export).
-    'es-module': boolean,
-    // CommonJS modules. Node configs already incorporate this; so use
-    // this module for browser configs.
-    'cjs-module': boolean,
+    sourceType: 'cjs' | 'esm',
     // Maybe this one should be on by default in __tests__ directories.
     jest: boolean,
     // Code for the browser, not Node. The React config already
     // incorporates this.
     browser: boolean,
     // Only one node option is allowed.
-    // node reads from the "engines" field in package.json.
-    // The others are useful if for some reason you don't specify an engine.
-    node: boolean,
-    node6: boolean,
-    node8: boolean,
-    react: boolean,
+    // If the value is true, it reads from the "engines" field in package.json.
+    // If for some reason you don't specify an engine, you can use a number.
+    // A truthy node value will set sourceType to cjs.
+    node: boolean | 6 | 8,
     xss: boolean,
     // Add custom ESLint stuff. You won't be able to install your own
     // plugins, but all of the rules from plugins used above will be available
     // at @mapbox/stickler/{pluginName}/{ruleName},
     // e.g. @mapbox/stickler/react/no-whatever.
-    eslintConfig: {..}
+    eslintConfig: {..},
+    // Override the configuration for files that match specific globs.
+    // I think only linting changes will be necessary. This is to allow
+    // for different flavors of JS in different directories (e.g. React
+    // in only some places, Node in some places but ES2015 imports in others).
+    // This will replace the need to create nested & cascading .eslintrc files.
+    overrides: [
+      {
+        files: [..],
+        ...jsLint
+      }
+    ]
   },
   // Toggle Prettier formatting of JS. On by default.
   jsFormat: boolean,
@@ -56,17 +62,6 @@ module.exports = {
   // Toggle linting of Markdown. On by default.
   mdLint: boolean,
   // Toggle formatting of Markdown. On by default.
-  mdFormat: boolean,
-  // Override the configuration for files that match specific globs.
-  // I think only linting changes will be necessary. This is to allow
-  // for different flavors of JS in different directories (e.g. React
-  // in only some places, Node in some places but ES2015 imports in others).
-  // This will replace the need to create nested & cascading .eslintrc files.
-  overrides: [
-    {
-      files: [..],
-      jsLint: {..}
-    }
-  ]
+  mdFormat: boolean
 }
 ```

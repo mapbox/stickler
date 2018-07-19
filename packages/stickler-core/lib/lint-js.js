@@ -5,18 +5,21 @@ const _ = require('lodash');
 const micromatch = require('micromatch');
 const createEslintConfig = require('./create-eslint-config');
 
+// sjlc = Stickler lintJs config
+// i.e. a sticklerConfig.lintJs value (without "overrides" or "files").
+
 function lintJs(sticklerConfig, filenames) {
-  if (sticklerConfig.lintJs === false) {
+  if (sticklerConfig.jsLint === false) {
     return Promise.resolve();
   }
 
-  const configFilenamesMap = mapConfigsToFilenames(
+  const sjlcFilenameMap = mapSjlcsToFilenames(
     sticklerConfig,
     filenames
   );
   const reportPromises = [];
-  for (const [config, filenames] of configFilenamesMap) {
-    const eslintConfig = createEslintConfig(config.jsLint);
+  for (const [sjlc, filenames] of sjlcFilenameMap) {
+    const eslintConfig = createEslintConfig(sjlc);
     reportPromises.push(runEslintOnFiles(eslintConfig, Array.from(filenames)));
   }
   return Promise.all(reportPromises).then(mergeEslintReports);
@@ -31,51 +34,56 @@ function runEslintOnFiles(eslintConfig, filenames) {
   return eslintEngine.executeOnFiles(filenames);
 }
 
-function mapGlobsToConfigs(sticklerConfig) {
-  const baseConfig = _.omit(sticklerConfig, ['overrides']);
-  const globConfigMap = new Map();
-
-  for (const override of sticklerConfig.overrides || []) {
-    globConfigMap.set(
-      override.files,
-      mergeConfigs(baseConfig, _.omit(override, ['files']))
-    );
-  }
-
-  globConfigMap.set(['**/*.js'], baseConfig);
-
-  return globConfigMap;
-}
-
 function mergeConfigs(a, b) {
-  const merged = Object.assign({}, a, b, {
-    jsLint: Object.assign({}, a.jsLint, b.jsLint)
-  });
+  const merged = _.merge({}, a, b);
   return merged;
 }
 
-function getConfigForFile(filename, globConfigMap) {
-  for (const [glob, config] of globConfigMap) {
+// Returns a map whose
+// - keys are sticklerConfig.jsLint values
+// - values are a Set of filenames
+function mapSjlcsToFilenames(sticklerConfig, filenames) {
+  const globSljcMap = mapGlobsToSljcs(sticklerConfig);
+  const sjlcFilenameMap = new Map();
+
+  // Each entry in sjlcFilenameMap maps a config to a set of filenames.
+  for (const config of globSljcMap.values()) {
+    sjlcFilenameMap.set(config, new Set());
+  }
+
+  for (const filename of filenames) {
+    const fileConfig = getConfigForFile(filename, globSljcMap);
+    sjlcFilenameMap.get(fileConfig).add(filename);
+  }
+
+  return sjlcFilenameMap;
+}
+
+// Returns a map whose
+// - keys are glob-arrays
+// - values are sticklerConfig.jsLint values
+function mapGlobsToSljcs(sticklerConfig) {
+  const baseSljcs = _.omit(sticklerConfig.jsLint, ['overrides']);
+  const globSljcMap = new Map();
+
+  for (const override of sticklerConfig.jsLint.overrides || []) {
+    globSljcMap.set(
+      override.files,
+      mergeConfigs(baseSljcs, _.omit(override, ['files']))
+    );
+  }
+
+  globSljcMap.set(['**/*.js'], baseSljcs);
+
+  return globSljcMap;
+}
+
+function getConfigForFile(filename, globSljcMap) {
+  for (const [glob, config] of globSljcMap) {
     if (micromatch.any(filename, glob)) {
       return config;
     }
   }
-}
-
-function mapConfigsToFilenames(sticklerConfig, filenames) {
-  const globConfigMap = mapGlobsToConfigs(sticklerConfig);
-  const configFilenamesMap = new Map();
-
-  // Each entry in configFilenamesMap maps a config to a set of filenames.
-  for (const config of globConfigMap.values()) {
-    configFilenamesMap.set(config, new Set());
-  }
-
-  for (const filename of filenames) {
-    const fileConfig = getConfigForFile(filename, globConfigMap);
-    configFilenamesMap.get(fileConfig).add(filename);
-  }
-  return configFilenamesMap;
 }
 
 function mergeEslintReports(reports) {
