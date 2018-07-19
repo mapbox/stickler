@@ -19,6 +19,9 @@
   "engines": {
     "node": ">=6"
   },
+  "peerDependencies": {
+    "eslint": "^5.1.0"
+  },
   "dependencies": {
     "babel-eslint": "^8.2.6",
     "eslint-plugin-flowtype": "^2.50.0",
