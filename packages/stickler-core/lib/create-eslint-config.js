@@ -6,8 +6,8 @@
 const booleanConfigs = [
   'babel',
   'base',
-  'es5',
   'jest',
+  'es5',
   'browser',
   'promise',
   'xss',
