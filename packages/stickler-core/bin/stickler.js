@@ -125,7 +125,7 @@ function loadConfig() {
     /* ignore */
   }
 
-  return configUtils.normalize(config);
+  return configUtils.normalize(config, process.cwd());
 }
 
 function handleUnexpectedError(error) {

@@ -2,6 +2,7 @@
 
 const path = require('path');
 
+// Enable dogfooding.
 const command =
   process.cwd() === path.resolve(__dirname, '../../../')
     ? path.resolve(__dirname, '../bin/stickler.js')

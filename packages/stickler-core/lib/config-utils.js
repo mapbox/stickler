@@ -1,13 +1,23 @@
 'use strict';
 
+const path = require('path');
+
 /**
  * Validate and normalize Stickler configuration.
  *
  * @param {Object} [config]
+ * @param {string} configDir
  * @returns {SticklerConfig}
  */
-function normalize(config = {}) {
+function normalize(config = {}, configDir) {
   // TODO: Add validation.
+
+  const absolutizeGlob = glob => {
+    if (glob.startsWith('**') || glob.startsWith('/')) {
+      return glob;
+    }
+    return path.join(configDir, glob);
+  };
 
   // Apply easy defaults.
   const normalized = Object.assign(
@@ -30,7 +40,8 @@ function normalize(config = {}) {
     '**/fixtures/**'
   ]
     .concat(normalized.ignore)
-    .filter(Boolean);
+    .filter(Boolean)
+    .map(absolutizeGlob);
 
   normalized.jsLint = Object.assign(
     {
@@ -38,6 +49,12 @@ function normalize(config = {}) {
     },
     normalized.jsLint
   );
+
+  if (normalized.jsLint.overrides) {
+    normalized.jsLint.overrides = normalized.jsLint.overrides.map(
+      absolutizeGlob
+    );
+  }
 
   return normalized;
 }
