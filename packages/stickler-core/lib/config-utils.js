@@ -51,9 +51,9 @@ function normalize(config = {}, configDir) {
   );
 
   if (normalized.jsLint.overrides) {
-    normalized.jsLint.overrides = normalized.jsLint.overrides.map(
-      absolutizeGlob
-    );
+    for (const override of normalized.jsLint.overrides) {
+      override.files = override.files.map(absolutizeGlob);
+    }
   }
 
   return normalized;

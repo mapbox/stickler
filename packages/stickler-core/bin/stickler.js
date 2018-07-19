@@ -9,12 +9,14 @@ const precommit = require('../lib/commands/precommit');
 const watch = require('../lib/commands/watch');
 const configUtils = require('../lib/config-utils');
 
+const DEFAULT_GLOB = '**/*.{js,json,md}';
+
 const filesOptions = {
   description:
     'Files or globs. Wrap globs in quotation marks for cross-platform consistency.',
   type: 'string',
   normalize: true,
-  default: '**/*.{js,json,md}'
+  default: DEFAULT_GLOB
 };
 
 yargs
@@ -109,11 +111,8 @@ function defineWatch(y) {
 }
 
 function runWatch(argv) {
-  if (!argv.globs || argv.globs.length === 0) {
-    console.log('You did not specify any files to watch');
-    process.exit(1);
-  }
-  const emitter = watch(loadConfig(), argv.globs);
+  const globs = argv.globs.length !== 0 ? argv.globs : DEFAULT_GLOB;
+  const emitter = watch(loadConfig(), globs);
   emitter.on('error', handleUnexpectedError);
 }
 

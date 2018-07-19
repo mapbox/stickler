@@ -12,7 +12,8 @@ function format(sticklerConfig, globs) {
 
   return globby(globs, {
     ignore: formatIgnore,
-    gitignore: true
+    gitignore: true,
+    absolute: true
   }).then(filenames => {
     const jsFilenames = micromatch.match(filenames, '**/*.{js,json}');
     const mdFilenames = micromatch.match(filenames, '**/*.md');

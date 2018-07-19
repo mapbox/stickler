@@ -10,7 +10,8 @@ const lintMd = require('../lint-md');
 function lint(sticklerConfig, globs) {
   return globby(globs, {
     ignore: sticklerConfig.ignore,
-    gitignore: true
+    gitignore: true,
+    absolute: true
   }).then(filenames => {
     const jsFilenames = micromatch.match(filenames, '**/*.js');
     const mdFilenames = micromatch.match(filenames, '**/*.md');

@@ -7,7 +7,7 @@ const timestamp = require('time-stamp');
 const lint = require('./lint');
 
 function watch(sticklerConfig, globs) {
-  console.log(stampedMessage(`Stickler is watching ...\n`));
+  console.log(stampedMessage(`Stickler is watching ...`));
 
   const emitter = new EventEmitter();
   const emitError = error => {
