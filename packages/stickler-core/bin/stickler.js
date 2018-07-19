@@ -3,10 +3,10 @@
 
 const yargs = require('yargs');
 const path = require('path');
-const eslintFormatterPretty = require('eslint-formatter-pretty');
 const lint = require('../lib/commands/lint');
 const format = require('../lib/commands/format');
 const precommit = require('../lib/commands/precommit');
+const watch = require('../lib/commands/watch');
 const configUtils = require('../lib/config-utils');
 
 const filesOptions = {
@@ -27,6 +27,12 @@ yargs
     definePrecommit,
     runPrecommit
   )
+  .command(
+    'watch [globs..]',
+    'Lint files when they change',
+    defineWatch,
+    runWatch
+  )
   .demand(1, 'You must specify a command')
   .help().argv;
 
@@ -39,12 +45,11 @@ function defineLint(y) {
 function runLint(argv) {
   lint(loadConfig(), argv.files)
     .then(results => {
-      const didError = results.some(result => result.errorCount > 0);
+      const didError = results.raw.some(result => result.errorCount > 0);
       if (!didError) {
         return;
       }
-      const formattedResults = eslintFormatterPretty(results);
-      console.log(formattedResults);
+      console.log(results.formatted);
       process.exit(1);
     })
     .catch(handleUnexpectedError);
@@ -63,15 +68,11 @@ function defineFormat(y) {
 
 function runFormat(argv) {
   format(loadConfig(), argv.files)
-    .then(formattedFilenames => {
-      if (argv.quiet || formattedFilenames.length === 0) {
+    .then(results => {
+      if (argv.quiet) {
         return;
       }
-
-      console.log('Formatted the following files:');
-      for (const filename of formattedFilenames) {
-        console.log(`  ${path.relative(process.cwd(), filename)}`);
-      }
+      console.log(results.formatted);
     })
     .catch(error => {
       // Print Prettier SyntaxErrors without the stack trace.
@@ -95,6 +96,25 @@ function runPrecommit() {
       }
     })
     .catch(handleUnexpectedError);
+}
+
+function defineWatch(y) {
+  y.version(false)
+    .positional('globs', {
+      description:
+        'Filenames or globs wrapped in quotation marks. Use string globs if you want the watcher to pick up on newly created files.',
+      type: 'array'
+    })
+    .help();
+}
+
+function runWatch(argv) {
+  if (!argv.globs || argv.globs.length === 0) {
+    console.log('You did not specify any files to watch');
+    process.exit(1);
+  }
+  const emitter = watch(loadConfig(), argv.globs);
+  emitter.on('error', handleUnexpectedError);
 }
 
 function loadConfig() {

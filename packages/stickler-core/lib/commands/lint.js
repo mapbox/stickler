@@ -1,8 +1,9 @@
 'use strict';
 
-const globby = require('globby');
 const micromatch = require('micromatch');
+const globby = require('globby');
 const vfileToEslint = require('vfile-to-eslint');
+const eslintFormatterPretty = require('eslint-formatter-pretty');
 const lintJs = require('../lint-js');
 const lintMd = require('../lint-md');
 
@@ -18,11 +19,14 @@ function lint(sticklerConfig, globs) {
       lintJs(sticklerConfig, jsFilenames),
       lintMd(sticklerConfig, mdFilenames)
     ]).then(([jsResults, mdResults]) => {
-      const eslintResults = [
+      const rawResults = [
         ...normalizeResults(jsResults),
         ...normalizeResults(vfileToEslint(mdResults))
       ];
-      return eslintResults;
+      return {
+        raw: rawResults,
+        formatted: eslintFormatterPretty(rawResults)
+      };
     });
   });
 }

@@ -1,8 +1,9 @@
 'use strict';
 
-const globby = require('globby');
 const _ = require('lodash');
 const micromatch = require('micromatch');
+const globby = require('globby');
+const path = require('path');
 const formatJs = require('../format-js');
 const formatMd = require('../format-md');
 
@@ -19,7 +20,20 @@ function format(sticklerConfig, globs) {
     return Promise.all([
       formatJs(sticklerConfig, jsFilenames),
       formatMd(sticklerConfig, mdFilenames)
-    ]).then(results => _.flatten(results));
+    ]).then(results => {
+      const formattedFilenames = _.flatten(results);
+      let formatted = '';
+      if (formattedFilenames.length !== 0) {
+        formatted += 'Formatted the following files:';
+        for (const filename of formattedFilenames) {
+          formatted += `\n  ${path.relative(process.cwd(), filename)}`;
+        }
+      }
+      return {
+        raw: formattedFilenames,
+        formatted
+      };
+    });
   });
 }
 
