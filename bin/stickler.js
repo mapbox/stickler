@@ -8,15 +8,16 @@ const format = require('../lib/commands/format');
 const precommit = require('../lib/commands/precommit');
 const watch = require('../lib/commands/watch');
 const configUtils = require('../lib/config-utils');
+const relativeGlob = require('../lib/relative-glob');
 
 const DEFAULT_GLOB = '**/*.{js,json,md}';
 
 const filesOptions = {
   description:
     'Files or globs. Wrap globs in quotation marks for cross-platform consistency.',
-  type: 'string',
+  type: 'array',
   normalize: true,
-  default: DEFAULT_GLOB
+  default: [DEFAULT_GLOB]
 };
 
 yargs
@@ -45,7 +46,7 @@ function defineLint(y) {
 }
 
 function runLint(argv) {
-  lint(loadConfig(), argv.files)
+  lint(loadConfig(), argv.files.map(relativeGlob))
     .then(results => {
       const didError = results.raw.some(result => result.errorCount > 0);
       if (!didError) {
@@ -69,7 +70,7 @@ function defineFormat(y) {
 }
 
 function runFormat(argv) {
-  format(loadConfig(), argv.files)
+  format(loadConfig(), argv.files.map(relativeGlob))
     .then(results => {
       if (argv.quiet) {
         return;
@@ -111,8 +112,8 @@ function defineWatch(y) {
 }
 
 function runWatch(argv) {
-  const globs = argv.globs.length !== 0 ? argv.globs : DEFAULT_GLOB;
-  const emitter = watch(loadConfig(), globs);
+  const globs = argv.globs.length !== 0 ? argv.globs : [DEFAULT_GLOB];
+  const emitter = watch(loadConfig(), globs.map(relativeGlob));
   emitter.on('error', handleUnexpectedError);
 }
 
@@ -124,7 +125,7 @@ function loadConfig() {
     /* ignore */
   }
 
-  return configUtils.normalize(config, process.cwd());
+  return configUtils.normalize(config);
 }
 
 function handleUnexpectedError(error) {
