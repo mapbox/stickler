@@ -2,62 +2,92 @@
 
 **EXPERIMENTAL! WORK IN PROGRESS! DO NOT USE!**
 
-No-fuss code quality enforcement for Mapbox frontend repositories.
+No-fuss code-quality tooling for Mapbox frontend repositories.
 
-## Inspirations
+## Table of contents
 
-- [XO](https://github.com/xojs/xo)
-- [Standard](https://github.com/standard/standard)
-- [kcd-scripts](https://github.com/kentcdodds/kcd-scripts)
+- [About](#about)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Inspirations](#inspirations)
 
-## Possible API
+## About
+
+Stickler lints and formats JavaScript and Markdown. In the future, it may do more.
+
+Behind the curtain, Stickler uses independent packages that you have probably used before — ESLint and ESLint plugins, Prettier, remark and remark-lint plugins. But Stickler is black box that contains that complexity, provides vetted defaults, and exposes simplified configuration. Stickler saves you from the chores of researching, installing, configurating, and periodically updating a boatload of dependencies in order to set up your workflow.
+
+Stickler's options and defaults are selected to meet the needs of Mapbox repositories — especially our frontend repositories, which often bobble various flavors of JS (React, ES2015, ES5, ES modules, Flow, etc.).
+
+The base ESLint configuration includes universal rule-catching errors. (No code-style rules are included because Stickler will format your code.) With your Stickler configuration you can toggle support for various JS flavors and environments: each setting activates appropriate linter settings and error-catching rules.
+
+Stickler's CLI exposes the commands you'll need to check your work.
+
+## Installation
+
+```
+npm install @mapbox/stickler
+```
+
+If you want to use `stickler precommit`, you'll also need to install [Husky](https://github.com/typicode/husky) or something similar.
+
+## Configuration
+
+Create a `stickler.config.js` file in your project root. It should export a configuration object.
 
 ```js
+// stickler.config.js
+
+'use strict';
+
 module.exports = {
-  // Glob-array of files that should be ignored.
-  // Replaces .eslintignore and .prettierignore.
+  // Glob-array of files that should be ignored by both linting and formatting.
+  // (Replaces .eslintignore, .prettierignore, .remarkignore, etc.)
   // Everything in .gitignore is automatically ignored.
   ignore: [files],
   // Linting configuration for JS.
-  // Everything except `custom` is a boolean that toggles
-  // a preconfigured ESLint config that targets a flavor of JS.
   jsLint: {
+    // Allow for globals.
     globals: { [string]: boolean },
-    // The following are on (true) by default.
+    // A few Promise-linting rules.
+    // This is the only option turned on by default.
     promise: boolean,
-    // The rest are off (false) by default.
-    // Some of these are incompatible (e.g. es5-browser and import),
-    // so you'll be warned when the stickler config is validated.
-    //
-    // Use babel-eslint, because you're using non-standard syntax.
+    // Enables JSX, lints it, enforces various error-preventing
+    // conventions.
+    react: boolean,
+    // Use babel-eslint, because you're using non-standard syntax
+    // (e.g. class properties).
     babel: boolean,
-    // Use for ES5 environments.
-    'es5': boolean,
+    // Expect an ES5 environment.
+    es5: boolean,
     // Prevent Flow annotations from breaking ESLint.
-    // Uses babel-eslint and the base eslint-plugin-flowtype rules.
+    // Turns on babel-eslint and the base eslint-plugin-flowtype rules.
     flow: boolean,
+    // CommonJS or ES modules.
     sourceType: 'cjs' | 'esm',
-    // Maybe this one should be on by default in __tests__ directories.
+    // Allow for Jest's globals. Usually you'll use this within an
+    // override.
     jest: boolean,
-    // Code for the browser, not Node. The React config already
-    // incorporates this.
+    // Allow for browser globals.
     browser: boolean,
-    // Only one node option is allowed.
-    // If the value is true, it reads from the "engines" field in package.json.
-    // If for some reason you don't specify an engine, you can use a number.
-    // A truthy node value will set sourceType to cjs.
+    // Expose Node globals. A truthy value also sets sourceType to cjs
+    // (though this can be overridden with sourceType).
+    // If the value is true, the Node version is read from the "engines"
+    // field in package.json. If for some reason you don't specify an
+    // engine in package.json, you can use a number.
     node: boolean | 6 | 8,
+    // Catch code that might allow XSS attacks. Turns on "browser" settings, also.
     xss: boolean,
     // Add custom ESLint stuff. You won't be able to install your own
-    // plugins, but all of the rules from plugins used above will be available
-    // at @mapbox/stickler/{pluginName}/{ruleName},
-    // e.g. @mapbox/stickler/react/no-whatever.
+    // plugins, but you can do everything else.
     eslintConfig: {..},
-    // Override the configuration for files that match specific globs.
-    // I think only linting changes will be necessary. This is to allow
-    // for different flavors of JS in different directories (e.g. React
-    // in only some places, Node in some places but ES2015 imports in others).
-    // This will replace the need to create nested & cascading .eslintrc files.
+    // Override the linting configuration for files that match specific globs.
+    // This is to allow for different flavors of JS in different directories
+    // (e.g. React in only some places, Node in some places but ES2015 imports
+    // in others). This replaces the need to create nested & cascading .eslintrc
+    // files. The first override whose glob matches a file will be used: the
+    // override configuration will be merged with the base defined above.
     overrides: [
       {
         files: [..],
@@ -65,13 +95,31 @@ module.exports = {
       }
     ]
   },
-  // Toggle Prettier formatting of JS. On by default.
+  // Toggle formatting of JS (with Prettier). On by default.
   jsFormat: boolean,
-  // Toggle Prettier formatting of JSON. On by default.
+  // Toggle formatting of JSON (with Prettier). On by default.
   jsonFormat: boolean,
-  // Toggle linting of Markdown. On by default.
+  // Toggle linting of Markdown (with remark-lint). On by default.
   mdLint: boolean,
-  // Toggle formatting of Markdown. On by default.
+  // Toggle formatting of Markdown (with remark). On by default.
   mdFormat: boolean
 }
 ```
+
+## Usage
+
+The Stickler CLI exposes the following commands:
+
+- `lint`: Lint files.
+- `format`: Format files.
+- `precommit`: Lint and format staged files. To use with Husky, for example, you'll
+  invoke this in the npm `"precommit"` script: `"precommit": "stickler precommit"`.
+- `watch`: Lint files as you work. When you save a file, it gets linted.
+
+Run `stickler --help` for details.
+
+## Inspirations
+
+- [XO](https://github.com/xojs/xo)
+- [Standard](https://github.com/standard/standard)
+- [kcd-scripts](https://github.com/kentcdodds/kcd-scripts)
