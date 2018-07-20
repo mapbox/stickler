@@ -8,7 +8,7 @@ const format = require('../lib/commands/format');
 const precommit = require('../lib/commands/precommit');
 const watch = require('../lib/commands/watch');
 const configUtils = require('../lib/config-utils');
-const relativeGlob = require('../lib/relative-glob');
+const absolutePath = require('../lib/absolute-path');
 
 const DEFAULT_GLOB = '**/*.{js,json,md}';
 
@@ -46,7 +46,7 @@ function defineLint(y) {
 }
 
 function runLint(argv) {
-  lint(loadConfig(), argv.files.map(relativeGlob))
+  lint(loadConfig(), argv.files.map(absolutePath))
     .then(results => {
       const didError = results.raw.some(result => result.errorCount > 0);
       if (!didError) {
@@ -70,7 +70,7 @@ function defineFormat(y) {
 }
 
 function runFormat(argv) {
-  format(loadConfig(), argv.files.map(relativeGlob))
+  format(loadConfig(), argv.files.map(absolutePath))
     .then(results => {
       if (argv.quiet) {
         return;
@@ -113,7 +113,7 @@ function defineWatch(y) {
 
 function runWatch(argv) {
   const globs = argv.globs.length !== 0 ? argv.globs : [DEFAULT_GLOB];
-  const emitter = watch(loadConfig(), globs.map(relativeGlob));
+  const emitter = watch(loadConfig(), globs.map(absolutePath));
   emitter.on('error', handleUnexpectedError);
 }
 
