@@ -22,8 +22,8 @@ const filesOptions = {
 
 yargs
   .usage('$0 <command>')
-  .command('lint [files..]', 'Lint files', defineLint, runLint)
-  .command('format [files..]', 'Format files', defineFormat, runFormat)
+  .command('lint [files..]', 'Lint files.', defineLint, runLint)
+  .command('format [files..]', 'Format files.', defineFormat, runFormat)
   .command(
     'precommit',
     'Lint and format staged files. For use in scripts.precommit.',
@@ -31,8 +31,8 @@ yargs
     runPrecommit
   )
   .command(
-    'watch [globs..]',
-    'Lint files when they change',
+    'watch [files..]',
+    'Lint files when they change.',
     defineWatch,
     runWatch
   )
@@ -79,7 +79,7 @@ function runFormat(argv) {
     })
     .catch(error => {
       // Print Prettier SyntaxErrors without the stack trace.
-      if (SyntaxError.prototype.isPrototypeOf(error)) {
+      if (error instanceof SyntaxError) {
         console.error(`SyntaxError: ${error.message}`);
       } else {
         handleUnexpectedError(error);
@@ -103,10 +103,12 @@ function runPrecommit() {
 
 function defineWatch(y) {
   y.version(false)
-    .positional('globs', {
+    .positional('files', {
       description:
         'Filenames or globs wrapped in quotation marks. Use string globs if you want the watcher to pick up on newly created files.',
-      type: 'array'
+      type: 'array',
+      normalize: true,
+      default: [DEFAULT_GLOB]
     })
     .help();
 }
@@ -122,7 +124,9 @@ function loadConfig() {
   try {
     config = require(path.join(process.cwd(), 'stickler.config.js'));
   } catch (error) {
-    /* ignore */
+    if (error.code !== 'MODULE_NOT_FOUND') {
+      throw error;
+    }
   }
 
   return configUtils.normalize(config);
