@@ -45,8 +45,7 @@ The Stickler CLI exposes the following commands:
 
 - `lint`: Lint files.
 - `format`: Format files.
-- `precommit`: Lint and format staged files. To use with Husky, for example, you'll
-  invoke this in the npm `"precommit"` script: `"precommit": "stickler precommit"`.
+- `precommit`: Lint and format staged files. You'll invoke this in the npm `"precommit"` script: `"precommit": "stickler precommit"`. (This hook is enabled by [Husky].)
 - `watch`: Lint files as you work. When you save a file, it gets linted.
 
 Run `stickler --help` for details.
@@ -280,3 +279,5 @@ Most files are ES5, so they can run uncompiled in the browser, but use CommonJS 
 [eslint-plugin-react]: https://github.com/yannickcr/eslint-plugin-react
 
 [eslint-plugin-flowtype]: https://github.com/gajus/eslint-plugin-flowtype
+
+[husky]: https://github.com/typicode/husky

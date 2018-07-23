@@ -26,7 +26,7 @@ yargs
   .command('format [files..]', 'Format files.', defineFormat, runFormat)
   .command(
     'precommit',
-    'Lint and format staged files. For use in scripts.precommit.',
+    'Lint and format staged files. For use in scripts.precommit in package.json.',
     definePrecommit,
     runPrecommit
   )
@@ -47,8 +47,8 @@ function defineLint(y) {
 
 function runLint(argv) {
   lint(loadConfig(), argv.files.map(absolutePath))
-    .then(results => {
-      const didError = results.raw.some(result => result.errorCount > 0);
+    .then((results) => {
+      const didError = results.raw.some((result) => result.errorCount > 0);
       if (!didError) {
         return;
       }
@@ -71,7 +71,7 @@ function defineFormat(y) {
 
 function runFormat(argv) {
   format(loadConfig(), argv.files.map(absolutePath))
-    .then(results => {
+    .then((results) => {
       if (argv.quiet) {
         return;
       }
@@ -79,7 +79,7 @@ function runFormat(argv) {
         console.log(results.formatted);
       }
     })
-    .catch(error => {
+    .catch((error) => {
       // Print Prettier SyntaxErrors without the stack trace.
       if (error instanceof SyntaxError) {
         console.error(`SyntaxError: ${error.message}`);
@@ -95,7 +95,7 @@ function definePrecommit(y) {
 
 function runPrecommit() {
   precommit()
-    .then(code => {
+    .then((code) => {
       if (code !== 0) {
         process.exit(1);
       }
