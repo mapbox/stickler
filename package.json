@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/stickler",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "No-fuss code quality enforcement for frontend repositories",
   "main": "index.js",
   "bin": {
@@ -47,7 +47,7 @@
     "micromatch": "^3.1.10",
     "normalize-package-data": "^2.4.0",
     "pify": "^3.0.0",
-    "prettier": "^1.13.7",
+    "prettier": "1.13.7",
     "remark": "^9.0.0",
     "remark-lint-blockquote-indentation": "^1.0.2",
     "remark-lint-final-definition": "^1.0.2",
