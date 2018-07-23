@@ -65,7 +65,7 @@ module.exports = {
     // Turns on babel-eslint and the base eslint-plugin-flowtype rules.
     flow: boolean,
     // CommonJS or ES modules.
-    sourceType: 'cjs' | 'esm',
+    sourceType: 'script' | 'module',
     // Allow for Jest's globals. Usually you'll use this within an
     // override.
     jest: boolean,
