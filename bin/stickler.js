@@ -7,7 +7,7 @@ const lint = require('../lib/commands/lint');
 const format = require('../lib/commands/format');
 const precommit = require('../lib/commands/precommit');
 const watch = require('../lib/commands/watch');
-const configUtils = require('../lib/config-utils');
+const normalizeConfig = require('../lib/normalize-config');
 const absolutePath = require('../lib/absolute-path');
 
 const DEFAULT_GLOB = '**/*.{js,json,md}';
@@ -75,7 +75,9 @@ function runFormat(argv) {
       if (argv.quiet) {
         return;
       }
-      console.log(results.formatted);
+      if (results.formatted) {
+        console.log(results.formatted);
+      }
     })
     .catch(error => {
       // Print Prettier SyntaxErrors without the stack trace.
@@ -129,7 +131,7 @@ function loadConfig() {
     }
   }
 
-  return configUtils.normalize(config);
+  return normalizeConfig(config);
 }
 
 function handleUnexpectedError(error) {
