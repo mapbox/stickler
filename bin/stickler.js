@@ -116,7 +116,8 @@ function defineWatch(y) {
 }
 
 function runWatch(argv) {
-  const globs = argv.globs.length !== 0 ? argv.globs : [DEFAULT_GLOB];
+  const globs =
+    argv.globs && argv.globs.length !== 0 ? argv.globs : [DEFAULT_GLOB];
   const emitter = watch(loadConfig(), globs.map(absolutePath));
   emitter.on('error', handleUnexpectedError);
 }
