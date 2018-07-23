@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/stickler",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "No-fuss code quality enforcement for frontend repositories",
   "main": "index.js",
   "bin": {
@@ -39,6 +39,7 @@
     "eslint-plugin-react": "^7.10.0",
     "eslint-plugin-xss": "^0.1.9",
     "globby": "^8.0.1",
+    "husky": "^0.14.3",
     "lint-staged": "^7.2.0",
     "lodash.flatten": "^4.4.0",
     "lodash.merge": "^4.6.1",
@@ -63,8 +64,5 @@
     "vfile": "^3.0.0",
     "vfile-to-eslint": "^1.0.0",
     "yargs": "^12.0.1"
-  },
-  "devDependencies": {
-    "husky": "^0.14.3"
   }
 }
