@@ -1,12 +1,12 @@
 # @mapbox/stickler
 
-**EXPERIMENTAL! WORK IN PROGRESS! DO NOT USE!**
-
 No-fuss code-quality tooling for Mapbox frontend repositories.
 
 ## Table of contents
 
 - [About](#about)
+  - [Features](#features)
+  - [Caveats](#caveats)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Configuration](#configuration)
@@ -21,15 +21,30 @@ No-fuss code-quality tooling for Mapbox frontend repositories.
 
 ## About
 
-Stickler lints and formats JavaScript and Markdown. In the future, it may do more.
+Stickler lints and formats JavaScript, JSON, and Markdown. (In the future, it may do more.)
 
-Behind the curtain, Stickler uses independent packages that you have probably used before — ESLint and ESLint plugins, Prettier, remark and remark-lint plugins. But Stickler is black box that contains that complexity, provides vetted defaults, and exposes simplified configuration. Stickler saves you from the chores of researching, installing, configurating, and periodically updating a boatload of dependencies in order to set up your workflow.
+Behind the curtain, Stickler uses independent packages that you have probably used before — ESLint and ESLint plugins, Prettier, remark and remark-lint plugins, Husky and lint-staged. But Stickler is a black box that contains that complexity, provides vetted defaults, and exposes simplified higher-level configuration. Stickler saves you from the chores of researching, installing, configurating, and periodically updating a boatload of dependencies in order to set up your workflow.
 
-Stickler's options and defaults are selected to meet the needs of Mapbox repositories — especially our frontend repositories, which often bobble various flavors of JS (React, ES2015, ES5, ES modules, Flow, etc.).
+Stickler's options and defaults are selected to meet the needs of Mapbox repositories — especially frontend repositories, which often bobble various flavors of JS (React, ES2015, ES5, ES modules, Flow, etc.).
 
-The base ESLint configuration includes universal rule-catching errors. (No code-style rules are included because Stickler will format your code.) With your Stickler configuration you can toggle support for various JS flavors and environments: each setting activates appropriate linter settings and error-catching rules.
+The base ESLint configuration includes universal rule-catching errors. (No code-style rules are included because Stickler will format your JS.) With your Stickler configuration you can toggle support for various JS flavors and environments: each setting activates appropriate linter settings and error-catching rules.
 
 Stickler's CLI exposes the commands you'll need to check your work.
+
+### Features
+
+These are some reasons you might want to use Stickler instead of setting up all the individual tools it incorporates:
+
+- Take advantage of lots of ESLint plugins and configuration presets without having to install, configure, and periodically update them all individually.
+- Useful Markdown validation and formatting, like validating Markdown links between files and adding tables of contents to Markdown files.
+- An `ignore` option in the config so you won't need multiple coordinated `.*ignore` files. And more `ignore` defaults, so you'll have to specify additional ignore globs less frequently.
+- Folder-specific linting overrides live in `stickler.config.js`, so you won't need to coordinate nested, cascading `.eslintrc` files.
+- Built-in precommit hook to ensure that auto-formatting happens automatically.
+- Simplified higher-level configuration options, reducing boilerplate across projects.
+
+### Caveats
+
+- No editor plugins yet. If you want realtime linting feedback, you can use `stickler watch`.
 
 ## Installation
 
@@ -60,7 +75,7 @@ Create a `stickler.config.js` file in your project root, where you'll run the `s
 
 Type: `Array<string>`.
 
-Glob-array of files that should be ignored by both linting and formatting. (Replaces the need for .eslintignore, .prettierignore, .remarkignore, etc.)
+Glob-array of files that should be ignored by both linting and formatting. (Replaces the need for `.eslintignore`, `.prettierignore`, `.remarkignore`, etc.)
 
 Everything in .gitignore is automatically ignored. Also, the following globs are automatically ignored:
 
@@ -188,6 +203,8 @@ Toggle the linting of Markdown files.
 Type: `boolean`. Default: `true`.
 
 Toggle the formatting of Markdown files.
+
+In addition to normalize the Markdown syntax, **this will automatically add and update a 3-level-deep table of contents if you put a `## Table of contents` header in your document.**
 
 ### Configuration examples
 
