@@ -26,7 +26,7 @@
     "node": ">=6"
   },
   "dependencies": {
-    "@mapbox/fusspot": "^0.3.0",
+    "@mapbox/fusspot": "^0.4.0",
     "babel-eslint": "^8.2.6",
     "chalk": "^2.4.1",
     "chokidar": "^2.0.4",
@@ -48,7 +48,7 @@
     "micromatch": "^3.1.10",
     "normalize-package-data": "^2.4.0",
     "pify": "^3.0.0",
-    "prettier": "1.13.7",
+    "prettier": "1.14.0",
     "remark": "^9.0.0",
     "remark-lint-blockquote-indentation": "^1.0.2",
     "remark-lint-final-definition": "^1.0.2",
@@ -61,7 +61,7 @@
     "remark-lint-no-undefined-references": "^1.0.2",
     "remark-toc": "^5.0.0",
     "remark-validate-links": "^7.0.0",
-    "time-stamp": "^2.0.0",
+    "time-stamp": "^2.0.1",
     "vfile": "^3.0.0",
     "vfile-to-eslint": "^1.0.0",
     "yargs": "^12.0.1"
