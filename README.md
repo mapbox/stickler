@@ -105,7 +105,7 @@ If you use an array, the following rules apply:
 
 - The `files` property of each item is a glob-array that matches files the `settings` apply to. *It is required for every item except the last* (see below).
 - Each file you lint must match *only one* of the `files` glob-arrays. If a file matches multiple, that's a mistake and an error will be thrown.
-- The *last* item in the array does not require a `files` property. If it has no `files` property, it serves as a *fallback*: its `settings` will apply to all files that didn't match one of the items above.
+- The *last* item in the array does not require a `files` property. If it has no `files` property, it serves as a *fallback*: its `settings` will apply to all files that didn't match one of the items above. If you would like to explicitly label it as a fallback, to improve the readability of the configuration, you can add `fallback: true` in place of the `files` property.
 - If the last item in the array is *not* a fallback (without a `files` property), Stickler will apply a default fallback of `{ node: true }`.
 
 **If Jest is a development dependency of the codebase,** Stickler will automatically allow for Jest and Node globals in files matching the following glob-array: `['*.test.js', 'test/**', '**/__tests__/**', '**/test-utils/*.js']`.
