@@ -23,7 +23,7 @@ No-fuss code-quality tooling for Mapbox frontend repositories.
 
 Stickler lints and formats JavaScript, JSON, and Markdown. (In the future, it may do more.)
 
-Behind the curtain, Stickler uses independent packages that you have probably used before — ESLint and ESLint plugins, Prettier, remark and remark-lint plugins, Husky and lint-staged. But Stickler is a black box that contains that complexity, provides vetted defaults, and exposes simplified higher-level configuration. Stickler saves you from the chores of researching, installing, configurating, and periodically updating a boatload of dependencies in order to set up your workflow.
+Behind the curtain, Stickler uses independent packages that you have probably used before — ESLint and ESLint plugins, Prettier, remark and remark-lint plugins, Husky and lint-staged. But Stickler is a black box that contains that complexity, provides vetted defaults, and exposes simplified higher-level configuration. Stickler saves you from the chores of researching, installing, configuring, and periodically updating a boatload of dependencies in order to set up your workflow.
 
 Stickler's options and defaults are selected to meet the needs of Mapbox repositories — especially frontend repositories, which often bobble various flavors of JS (React, ES2015, ES5, ES modules, Flow, etc.).
 
@@ -38,9 +38,9 @@ These are some reasons you might want to use Stickler instead of setting up all 
 - Take advantage of lots of ESLint plugins and configuration presets without having to install, configure, and periodically update them all individually.
 - Useful Markdown validation and formatting, like validating Markdown links between files and adding tables of contents to Markdown files.
 - An `ignore` option in the config so you won't need multiple coordinated `.*ignore` files. And more `ignore` defaults, so you'll have to specify additional ignore globs less frequently.
-- Folder-specific linting overrides live in `stickler.config.js`, so you won't need to coordinate nested, cascading `.eslintrc` files.
+- Folder-specific linting settings live in `stickler.config.js`, so you won't need to coordinate nested, cascading `.eslintrc` files.
 - Built-in precommit hook to ensure that auto-formatting happens automatically.
-- Simplified higher-level configuration options, reducing boilerplate across projects.
+- Useful defaults and simplified higher-level configuration options, reducing boilerplate across projects.
 
 ### Caveats
 
@@ -90,35 +90,53 @@ dist/**
 
 ### jsLint
 
-Type: `Object`.
+Type: `JsLintSettings | Array<{ files?: Array<string>, settings: JsLintSettings }>`.
 
 Configuration for JS linting.
 
-#### jsLint.globals
+`jsLint` can be one of the following:
+
+- A single object that applies to *all* JS files in the codebase.
+- An array of objects that specify different lint settings for different files.
+
+By using an array, you can lint different JS flavors or environments within the same codebase. For example, many codebases have React code for browser within certain directories, Node code in other directories, Jest tests in others, and so on. (This replaces the need for nested and cascading `.eslintrc` files.)
+
+If you use an array, the following rules apply:
+
+- The `files` property of each item is a glob-array that matches files the `settings` apply to. *It is required for every item except the last* (see below).
+- Each file you lint must match *only one* of the `files` glob-arrays. If a file matches multiple, that's a mistake and an error will be thrown.
+- The *last* item in the array does not require a `files` property. If it has no `files` property, it serves as a *fallback*: its `settings` will apply to all files that didn't match one of the items above. If you would like to explicitly label it as a fallback, to improve the readability of the configuration, you can add `fallback: true` in place of the `files` property.
+- If the last item in the array is *not* a fallback (without a `files` property), Stickler will apply a default fallback of `{ node: true }`.
+
+**If Jest is a development dependency of the codebase,** Stickler will automatically allow for Jest and Node globals in files matching the following glob-array: `['*.test.js', 'test/**', '**/__tests__/**', '**/test-utils/*.js']`.
+
+**Keep in mind that you can use `Object.assign` and other JS to extend and merge settings.** `stickler.config.js` is a regular JS module.
+
+#### JsLintSettings.globals
 
 Type: `{ [string]: boolean }`.
 
 Allow the specified globals. For example, you may use an `analytics` global in some code.
 
-#### jsLint.promise
+#### JsLintSettings.promise
 
 Type: `boolean`. Default: `true`.
 
 Enable Promise-linting rules from [eslint-plugin-promise].
 
-#### jsLint.react
+#### JsLintSettings.react
 
 Type: `boolean`. Default: `false`.
 
 Enables JSX-linting rules from [eslint-plugin-react].
 
-#### jsLint.babel
+#### JsLintSettings.babel
 
 Type: `boolean`. Default: `false`.
 
 Use [babel-eslint] to parse JS, because you're using non-standard syntax such as class properties or Flow annotations.
 
-#### jsLint.es5
+#### JsLintSettings.es5
 
 Type: `boolean`. Default: `false`.
 
@@ -126,59 +144,49 @@ Enforce ES5 JS. Useful for code that you want to run in browsers without any Bab
 
 The `Promise` global is enabled, expecting that you're using a `Promise` polyfill.
 
-#### jsLint.flow
+#### JsLintSettings.flow
 
 Type: `boolean`. Default: `false`.
 
 Prevent Flow annotations from breaking ESLint. Uses [eslint-plugin-flowtype] and turns on [babel-eslint] \(so you don't need to also turn on [`babel`]).
 
-#### jsLint.moduleType
+#### JsLintSettings.moduleType
 
-Type: `'cjs' | 'esm'`.
+Type: `'cjs' | 'esm' | 'none'`. Default: `'cjs'`.
 
-Tell Stickler which type of JS modules you're using. `cjs` = CommonJS; `esm` = ES Modules. Turns on rules from [eslint-plugin-node] or [eslint-plugin-import], respectively, to validate your dependencies.
+Tell Stickler which type of JS modules you're using. `cjs` = CommonJS; `esm` = ES Modules. Turns on rules from [eslint-plugin-node] or [eslint-plugin-import], respectively, to validate your dependencies. `none` = No modules allowed.
 
-#### jsLint.jest
+#### JsLintSettings.jest
 
 Type: `boolean`. Default: `false`.
 
-Allow Jest's globals. Usually you'll use this within an override, targeting your test directories.
+Allow Jest's globals. Usually you won't need to set this manually because Stickler will automatically figure out you're using Jest.
 
-#### jsLint.browser
+#### JsLintSettings.browser
 
 Type: `boolean`. Default: `false`.
 
 Allow browser globals, like `window`.
 
-#### jsLint.node
+#### JsLintSettings.node
 
 Type: `boolean | 6 | 8`. Default: `false`.
 
 Configure linting for Node. Allows Node globals and sets `moduleType: 'cjs'` (though this can be overridden with [`moduleType`]).
 
-Also uses [eslint-plugin-node] to check that you're using JS features supported by your versino of Node. If the value is `true`, the Node version is read from the `"engines"` field in your `package.json`. If for some reason you don't specify `"engines"`, use a number to specify your Node version.
+Also uses [eslint-plugin-node] to check that you're using JS features supported by your version of Node. If the value is `true`, the Node version is read from the `"engines"` field in your `package.json`. If for some reason you don't specify `"engines"`, use a number to specify your Node version.
 
-#### jsLint.xss
+#### JsLintSettings.xss
 
 Type: `boolean`. Default: `false`.
 
 Enable XSS-preventing rules from [eslint-plugin-xss]. Usually you should use this in combination with [`browser`].
 
-#### jsLint.eslintConfig
+#### JsLintSettings.eslintConfig
 
 Type: `Object`.
 
 Add custom ESLint configuration. You won't be able to install your own plugins, but you can do everything else. Typically you'll use this to add or override rules set by the other options.
-
-#### jsLint.overrides
-
-Type: `Array<{ files: Array<string>, ...jsLint }>`.
-
-An array of overrides. Each override has a `files` property whose value is a glob-array, and the rest of the properties can be any other `jsLint` property (except `overrides`).
-
-Override the linting configuration for files that match the specified globs. This allows for different JS flavors or environments in different directories. For example, many codebases have React code for browser within a certain directory, Node code in other directories, Jest tests in others. This replaces the need for nested and cascading `.eslintrc` files.
-
-The first override whose glob matches a file will be used. Its configuration will be merged with the base `jsLint` configuration defined outside of `overrides`.
 
 ### jsFormat
 
@@ -208,66 +216,102 @@ In addition to normalize the Markdown syntax, **this will automatically add and 
 
 ### Configuration examples
 
-All JS files run in Node.
+All JS files run in the version of Node specified in `"engines"` in `package.json`.
 
-```js
-{
-  jsLint: {
-    node: true
-  }
-}
+```
+// No config required!
 ```
 
-Most files are React components and use ES2015 modules and Flow. There are also Jest tests and a few JS files that run in Node.
+All JS files are expected to run in Node 10, but it's not specified in `"engines"` in `package.json`.
 
 ```js
-{
+'use strict';
+
+module.exports = {
   jsLint: {
-    react: true,
-    browser: true,
-    moduleType: 'esm',
-    flow: true,
-    overrides: [
-      {
-        files: ['src/test-utils/**', 'src/**/__tests__/**'],
-        jest: true
-      },
-      {
-        files: ['*.js', 'scripts/**'],
-        node: 6,
-        flow: false,
-        react: false,
-        moduleType: 'cjs'
-      }
-    ]
+    node: 10
   }
-}
+};
 ```
 
-Most files are ES5, so they can run uncompiled in the browser, but use CommonJS so they can be bundled. We're ignoring a `www` directory, where website files are built. We're allowing for a global `analytics` object. Within a couple of directories we're turning on a couple of additional linting rules. And we're turning off JS formatting.
+Files in `src/` are React components and use ES2015 modules and Flow, and Jest tests live in nested `__tests__/` subdirectories. There are also a few JS files that run in Node in the project root and a `scripts/` directory.
 
 ```js
-{
-  ignore: ['www/**'],
-  jsFormat: false,
-  jsLint: {
-    globals: { analytics: true },
-    moduleType: 'cjs',
-    browser: true,
-    es5: true,
-    overrides: [
-      {
-        files: ['services/**', 'lib/**'],
+'use strict';
+
+module.exports = {
+  jsLint: [
+    {
+      files: ['src/**'],
+      settings: {
+        react: true,
         browser: true,
+        moduleType: 'esm',
+        flow: true,
+      }
+    },
+    // { node: true } is the automatic fallback
+  ]
+};
+```
+
+The same situation as above, except we haven't designated an `"engines"` field in `package.json` so we want to tell Stickler which version of Node to expect in files outside of `src/`:
+
+```js
+'use strict';
+
+module.exports = {
+  jsLint: [
+    {
+      files: ['src/**'],
+      settings: {
+        react: true,
+        browser: true,
+        moduleType: 'esm',
+        flow: true,
+      }
+    },
+    {
+      node: 8
+    }
+  ]
+};
+```
+
+Most files are ES5, so they can run uncompiled in the browser. We're ignoring the `ignore-me/` directory. We're allowing for a global `analytics` object. Within a couple of directories we're turning on a couple of additional linting rules. In one directory we have JS files with *no modules* (!), just immediately invoked function expressions. And we're turning off JS formatting.
+
+```js
+'use strict';
+
+const baseJsLint = {
+  browser: true,
+  es5: true,
+  globals: { analytics: true }
+};
+
+module.exports = {
+  ignore: ['ignore-me/**'],
+  jsFormat: false,
+  jsLint: [
+    {
+      files: ['services/**', 'lib/**'],
+      settings: Object.assign({}, baseJsLint, {
         eslintConfig: {
           rules: {
             'no-extra-parens': 'error',
             'valid-jsdoc': 'error'
           }
         }
-      }
-    ]
-  }
+      })
+    },
+    {
+      files: ['iifes/**'],
+      settings: Object.assign({}, baseJsLint, {
+        moduleType: 'none'
+      })
+    },
+    baseJsLint
+  ]
 }
 ```
 
@@ -277,11 +321,11 @@ Most files are ES5, so they can run uncompiled in the browser, but use CommonJS 
 - [Standard](https://github.com/standard/standard)
 - [kcd-scripts](https://github.com/kentcdodds/kcd-scripts)
 
-[`moduletype`]: #jslintmoduletype
+[`moduletype`]: #jslintsettingsmoduletype
 
-[`babel`]: #jslintbabel
+[`babel`]: #jslintsettingsbabel
 
-[`browser`]: #jslintbrowser
+[`browser`]: #jslintsettingsbrowser
 
 [babel-eslint]: https://github.com/babel/babel-eslint
 
