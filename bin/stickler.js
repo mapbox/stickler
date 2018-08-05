@@ -36,7 +36,7 @@ yargs
     defineWatch,
     runWatch
   )
-  .demand(1, 'You must specify a command')
+  .demand(1, 'ERROR: You must specify a command')
   .help().argv;
 
 function defineLint(y) {
@@ -48,10 +48,10 @@ function defineLint(y) {
 function runLint(argv) {
   lint({ cwd, globs: argv.files.map(absolutePath(cwd)) })
     .then((results) => {
-      if (!results.errored) {
+      if (!results) {
         return;
       }
-      console.log(results.formatted);
+      console.log(results);
       process.exit(1);
     })
     .catch(handleUnexpectedError);
