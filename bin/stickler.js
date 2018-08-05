@@ -2,12 +2,10 @@
 'use strict';
 
 const yargs = require('yargs');
-const path = require('path');
 const lint = require('../lib/commands/lint');
 const format = require('../lib/commands/format');
 const precommit = require('../lib/commands/precommit');
 const watch = require('../lib/commands/watch');
-const normalizeConfig = require('../lib/config/normalize-config');
 const absolutePath = require('../lib/utils/absolute-path');
 
 const DEFAULT_GLOB = '**/*.{js,json,md}';
@@ -19,6 +17,8 @@ const filesOptions = {
   normalize: true,
   default: [DEFAULT_GLOB]
 };
+
+const cwd = process.cwd();
 
 yargs
   .usage('$0 <command>')
@@ -46,7 +46,7 @@ function defineLint(y) {
 }
 
 function runLint(argv) {
-  lint(argv.files.map(absolutePath))
+  lint({ cwd, globs: argv.files.map(absolutePath(cwd)) })
     .then((results) => {
       if (!results.errored) {
         return;
@@ -69,7 +69,7 @@ function defineFormat(y) {
 }
 
 function runFormat(argv) {
-  format(argv.files.map(absolutePath))
+  format({ cwd, globs: argv.files.map(absolutePath(cwd)) })
     .then((results) => {
       if (argv.quiet) {
         return;
@@ -117,21 +117,8 @@ function defineWatch(y) {
 function runWatch(argv) {
   const globs =
     argv.globs && argv.globs.length !== 0 ? argv.globs : [DEFAULT_GLOB];
-  const emitter = watch(loadConfig(), globs.map(absolutePath));
+  const emitter = watch({ cwd, globs: globs.map(absolutePath(cwd)) });
   emitter.on('error', handleUnexpectedError);
-}
-
-function loadConfig() {
-  let config = {};
-  try {
-    config = require(path.join(process.cwd(), 'stickler.config.js'));
-  } catch (error) {
-    if (error.code !== 'MODULE_NOT_FOUND') {
-      throw error;
-    }
-  }
-
-  return normalizeConfig(config);
 }
 
 function handleUnexpectedError(error) {
