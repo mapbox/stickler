@@ -7,8 +7,8 @@ const lint = require('../lib/commands/lint');
 const format = require('../lib/commands/format');
 const precommit = require('../lib/commands/precommit');
 const watch = require('../lib/commands/watch');
-const normalizeConfig = require('../lib/normalize-config');
-const absolutePath = require('../lib/absolute-path');
+const normalizeConfig = require('../lib/config/normalize-config');
+const absolutePath = require('../lib/utils/absolute-path');
 
 const DEFAULT_GLOB = '**/*.{js,json,md}';
 
@@ -46,10 +46,9 @@ function defineLint(y) {
 }
 
 function runLint(argv) {
-  lint(loadConfig(), argv.files.map(absolutePath))
+  lint(argv.files.map(absolutePath))
     .then((results) => {
-      const didError = results.raw.some((result) => result.errorCount > 0);
-      if (!didError) {
+      if (!results.errored) {
         return;
       }
       console.log(results.formatted);
@@ -70,13 +69,13 @@ function defineFormat(y) {
 }
 
 function runFormat(argv) {
-  format(loadConfig(), argv.files.map(absolutePath))
+  format(argv.files.map(absolutePath))
     .then((results) => {
       if (argv.quiet) {
         return;
       }
-      if (results.formatted) {
-        console.log(results.formatted);
+      if (results) {
+        console.log(results);
       }
     })
     .catch((error) => {
@@ -95,8 +94,8 @@ function definePrecommit(y) {
 
 function runPrecommit() {
   precommit()
-    .then((code) => {
-      if (code !== 0) {
+    .then((result) => {
+      if (result.errored) {
         process.exit(1);
       }
     })
