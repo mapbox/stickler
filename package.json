@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/stickler",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "No-fuss code quality enforcement for frontend repositories",
   "main": "index.js",
   "bin": {
