@@ -2,13 +2,11 @@
 'use strict';
 
 const yargs = require('yargs');
-const path = require('path');
 const lint = require('../lib/commands/lint');
 const format = require('../lib/commands/format');
 const precommit = require('../lib/commands/precommit');
 const watch = require('../lib/commands/watch');
-const normalizeConfig = require('../lib/normalize-config');
-const absolutePath = require('../lib/absolute-path');
+const absolutePath = require('../lib/utils/absolute-path');
 
 const DEFAULT_GLOB = '**/*.{js,json,md}';
 
@@ -19,6 +17,8 @@ const filesOptions = {
   normalize: true,
   default: [DEFAULT_GLOB]
 };
+
+const cwd = process.cwd();
 
 yargs
   .usage('$0 <command>')
@@ -36,7 +36,7 @@ yargs
     defineWatch,
     runWatch
   )
-  .demand(1, 'You must specify a command')
+  .demand(1, 'ERROR: You must specify a command')
   .help().argv;
 
 function defineLint(y) {
@@ -46,13 +46,12 @@ function defineLint(y) {
 }
 
 function runLint(argv) {
-  lint(loadConfig(), argv.files.map(absolutePath))
+  lint({ cwd, globs: argv.files.map(absolutePath(cwd)) })
     .then((results) => {
-      const didError = results.raw.some((result) => result.errorCount > 0);
-      if (!didError) {
+      if (!results) {
         return;
       }
-      console.log(results.formatted);
+      console.log(results);
       process.exit(1);
     })
     .catch(handleUnexpectedError);
@@ -70,13 +69,13 @@ function defineFormat(y) {
 }
 
 function runFormat(argv) {
-  format(loadConfig(), argv.files.map(absolutePath))
+  format({ cwd, globs: argv.files.map(absolutePath(cwd)) })
     .then((results) => {
       if (argv.quiet) {
         return;
       }
-      if (results.formatted) {
-        console.log(results.formatted);
+      if (results) {
+        console.log(results);
       }
     })
     .catch((error) => {
@@ -95,8 +94,8 @@ function definePrecommit(y) {
 
 function runPrecommit() {
   precommit()
-    .then((code) => {
-      if (code !== 0) {
+    .then((result) => {
+      if (result.errored) {
         process.exit(1);
       }
     })
@@ -118,21 +117,8 @@ function defineWatch(y) {
 function runWatch(argv) {
   const globs =
     argv.globs && argv.globs.length !== 0 ? argv.globs : [DEFAULT_GLOB];
-  const emitter = watch(loadConfig(), globs.map(absolutePath));
+  const emitter = watch({ cwd, globs: globs.map(absolutePath(cwd)) });
   emitter.on('error', handleUnexpectedError);
-}
-
-function loadConfig() {
-  let config = {};
-  try {
-    config = require(path.join(process.cwd(), 'stickler.config.js'));
-  } catch (error) {
-    if (error.code !== 'MODULE_NOT_FOUND') {
-      throw error;
-    }
-  }
-
-  return normalizeConfig(config);
 }
 
 function handleUnexpectedError(error) {
